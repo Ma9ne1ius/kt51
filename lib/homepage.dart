@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:kt51/core/network_data_status.dart';
+import 'package:kt51/getsomethingfromlist.dart';
 import 'package:kt51/model/car.dart';
 import 'package:kt51/model/carsdata.dart';
 import 'package:kt51/widgets/product_widget.dart';
@@ -19,24 +20,14 @@ class _HomePageState extends State<HomePage> {
   var cars = <Car>[];
 
   Future<void> getNetworkData() async {
-    if (networkStatus == NetworkDataStatus.init) {
-      // await Future.delayed(const Duration(seconds: 1));
-    }
     networkStatus = NetworkDataStatus.loading;
     setState(() {});
     var response = await client.get(url);
 
-    // if (response.statusCode == 200) {
-    //   networkStatus = NetworkDataStatus.error;
-    //   cars = [];
-    //   setState(() {});
-    //   return;
-    // }
     cars = CarsData.fromJson(response.data).cars;
-    // await Future.delayed(const Duration(seconds: 2));
+
     networkStatus = NetworkDataStatus.success;
     setState(() {});
-    // print(cars.length);
   }
 
   @override
@@ -49,7 +40,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // print('BUILD');
+    const String FFName = 'Zeroes 3';
+
+    List<double> priceList = [];
+    // List<List<dynamic>> priceList=[];
+    for (var i in cars) {
+      priceList.add(i.price);
+    }
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -64,7 +62,50 @@ class _HomePageState extends State<HomePage> {
                         ? () => getNetworkData()
                         : null,
                     child: const Text("Обновить данные")),
-              Text("STATUS: $networkStatus"),
+              Text(
+                "STATUS: ${networkStatus.name}",
+                style: const TextStyle(
+                  fontFamily: FFName,
+                  color: Color.fromARGB(255, 56, 56, 56),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Maridian Prise: ${getMedianFromDoubleList(priceList).toString()}",
+                    style: const TextStyle(
+                      fontFamily: FFName,
+                      color: Color.fromARGB(255, 56, 56, 56),
+                      fontSize: 17,
+                    ),
+                  ),
+                  Text(
+                    "Average Prise: ${getSimpleAverageFromDoubleList(priceList).toString()}",
+                    style: const TextStyle(
+                      fontFamily: FFName,
+                      color: Color.fromARGB(255, 56, 56, 56),
+                      fontSize: 17,
+                    ),
+                  ),
+                  Text(
+                    "Max Prise: ${getMaxFromDoubleList(priceList).toString()}",
+                    style: const TextStyle(
+                      fontFamily: FFName,
+                      color: Color.fromARGB(255, 56, 56, 56),
+                      fontSize: 17,
+                    ),
+                  ),
+                  Text(
+                    "Min Prise: ${getMinFromDoubleList(priceList).toString()}",
+                    style: const TextStyle(
+                      fontFamily: FFName,
+                      color: Color.fromARGB(255, 56, 56, 56),
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 20,
               ),

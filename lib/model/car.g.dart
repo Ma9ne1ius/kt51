@@ -10,7 +10,7 @@ _$CarImpl _$$CarImplFromJson(Map<String, dynamic> json) => _$CarImpl(
       brand: json['car'] as String,
       model: json['car_model'] as String,
       color: json['car_color'] as String,
-      price: const PriceConverter().fromJson(json['price'] as String),
+      price: const PriceConverter().fromJson(json['price']),
       availability: json['availability'] as bool,
     );
 
